@@ -28,3 +28,16 @@ export async function getApplicationsCountByMonth(
     console.error(error);
   }
 }
+
+export async function getApplicationsProgress(
+  year: string
+): Promise<{ name: string; data: number[] }[] | undefined> {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/job-application/progress/${year}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

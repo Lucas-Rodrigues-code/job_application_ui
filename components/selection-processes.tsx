@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ApexChart from "react-apexcharts";
+import ReactApexChart from "react-apexcharts";
 
-import { getApplicationsCountByMonth } from "@/api/job_applications.api";
+import { getApplicationsProgress } from "@/api/job_applications.api";
 import {
   Select,
   SelectContent,
@@ -12,7 +12,6 @@ import {
 } from "./ui/select";
 import { Label } from "./ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import ReactApexChart from "react-apexcharts";
 
 export type Application = {
   id: number;
@@ -24,15 +23,23 @@ export type Application = {
 };
 
 export function SelectionProcesses() {
-  const [counts, setCounts] = useState<{ name: string; data: number[] }[]>([
-    { name: "Candidato", data: [1, 2, 3, 4, 0, 0, 0, 0, 0, 0] },
-    { name: "Entrevista Inicial", data: [2, 9, 4, 5, 6] },
-    /*  { name: "Em andamento", data: [9, 8, 8] },
-    { name: "contratado", data: [9, 8, 8] }, */
-  ]);
+  const [counts, setCounts] = useState<{ name: string; data: number[] }[]>([]);
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString()
   );
+
+  useEffect(() => {
+    const count = async () => {
+      const data: any[] | undefined = await getApplicationsProgress(
+        selectedYear
+      );
+      if (data) {
+        setCounts(data);
+      }
+    };
+
+    count();
+  }, [selectedYear]);
 
   const allMonths = [
     "janeiro",
