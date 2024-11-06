@@ -6,22 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CountByMonth } from "@/components/bar-chart-count-by-month";
 import { getApplications } from "@/api/job_applications.api";
 import { SelectionProcesses } from "@/components/selection-processes";
-
-export type Application = {
-  id: number;
-  companyName: string;
-  position: string;
-  applicationDate: string;
-  status: string;
-  notes: string;
-};
+import { Application } from "@/types/application";
 
 export default function DashboardPage() {
   const [applications, setApplications] = useState<Application[]>([]);
 
   useEffect(() => {
     const get = async () => {
-      const data: Application[] | undefined = await getApplications();
+      const data: Application[] = await getApplications();
       if (data) {
         const job_applications = data.map((app) => {
           return {
