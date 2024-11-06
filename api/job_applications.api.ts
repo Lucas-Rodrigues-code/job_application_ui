@@ -1,43 +1,32 @@
-import axios from "axios";
+import { Application, count, countProgress } from "@/types/application";
+import api from "./api";
 
-import { Application } from "@/app/page";
-
-export async function getApplications(): Promise<Application[] | undefined> {
-  try {
-    const response = await axios.get("http://localhost:3000/job-application");
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+export async function getApplications(): Promise<Application[]> {
+  const response = await api.get<Application[]>("/job-application");
+  return response.data;
 }
-
-type count = {
-  month: string;
-  count: number;
-};
 
 export async function getApplicationsCountByMonth(
   year: string
-): Promise<count[] | undefined> {
-  try {
-    const response = await axios.get(
-      `http://localhost:3000/job-application/count/by-month/${year}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+): Promise<count[]> {
+  const response = await api.get<count[]>(
+    `/job-application/count/by-month/${year}`
+  );
+  return response.data;
 }
 
 export async function getApplicationsProgress(
   year: string
-): Promise<{ name: string; data: number[] }[] | undefined> {
-  try {
-    const response = await axios.get(
-      `http://localhost:3000/job-application/progress/${year}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+): Promise<countProgress[]> {
+  const response = await api.get<countProgress[]>(
+    `/job-application/progress/${year}`
+  );
+  return response.data;
+}
+
+export async function createApplications(
+  body: Omit<Application, "id">
+): Promise<Application> {
+  const response = await api.post<Application>(`/job-application`, body);
+  return response.data;
 }
