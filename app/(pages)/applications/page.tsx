@@ -136,7 +136,7 @@ export default function ApplicationsPage() {
           />
           <Button onClick={addApplication}>Adicionar</Button>
         </div>
-        <TableApplications application={application} />
+        <TableApplications application={application} seApplication={seApplication} />
       </div>
     </div>
   );

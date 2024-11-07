@@ -17,13 +17,20 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
 import { Application } from "@/types/application";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import {
+  deleteApplication,
+  updateApplication,
+} from "@/api/job_applications.api";
+import { useToast } from "@/hooks/use-toast";
+import ModalUpdateApplication from "./modal-update-apllication";
+import { formatDate } from "@/utils";
 
 export default function TableApplications({
   application,
+  seApplication,
 }: {
   application: Application[];
+  seApplication: (application: Application[]) => void;
 }) {
   const [editingApplication, setEditingApplication] =
     useState<Application | null>(null);
@@ -31,21 +38,47 @@ export default function TableApplications({
     null
   );
 
-  const updateApplication = () => {
-    if (editingApplication) {
-      /*  seApplication(
-        application.map((c) =>
-          c.id === editingApplication.id ? editingApplication : c
-        )
-      ); */
+  const { toast } = useToast();
+
+  const handleUpdateApplication = async () => {
+    try {
+      if (!editingApplication) return;
+      const { id, ...applicationWithoutId } = editingApplication;
+      await updateApplication(applicationWithoutId, id);
+
+      toast({
+        title: "Candidatura atualizada com sucesso",
+        variant: "sucess",
+      });
+      seApplication(
+        application.map((c) => (c.id === id ? { ...editingApplication } : c))
+      );
       setEditingApplication(null);
+    } catch (error: any) {
+      toast({
+        title: "Erro ao atualizar candidatura",
+        variant: "destructive",
+      });
+      console.log(error);
     }
   };
 
-  const deleteApplication = () => {
-    if (applicationToDelete !== null) {
-      /* seApplication(application.filter((c) => c.id !== applicationToDelete)); */
+  const handleDeleteApplication = async () => {
+    try {
+      if (!applicationToDelete) return;
+      await deleteApplication(applicationToDelete);
+      toast({
+        title: "Candidatura excluída com sucesso",
+        variant: "sucess",
+      });
+      seApplication(application.filter((c) => c.id !== applicationToDelete));
       setApplicationToDelete(null);
+    } catch (error: any) {
+      toast({
+        title: "Erro ao excluir candidatura",
+        variant: "destructive",
+      });
+      console.log(error);
     }
   };
 
@@ -57,6 +90,7 @@ export default function TableApplications({
             <TableHead>Nome</TableHead>
             <TableHead>Vaga</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Data</TableHead>
             <TableHead>Ações</TableHead>
           </TableRow>
         </TableHeader>
@@ -66,11 +100,21 @@ export default function TableApplications({
               <TableCell>{item.companyName}</TableCell>
               <TableCell>{item.position}</TableCell>
               <TableCell>{item.status}</TableCell>
+              <TableCell>{formatDate(item.applicationDate)}</TableCell>
               <TableCell>
                 <Button
                   variant="outline"
                   className="mr-2"
-                  onClick={() => setEditingApplication(item)}
+                  onClick={() =>
+                    setEditingApplication({
+                      id: item.id,
+                      companyName: item.companyName,
+                      position: item.position,
+                      applicationDate: item.applicationDate,
+                      status: item.status,
+                      notes: item.notes,
+                    })
+                  }
                 >
                   Editar
                 </Button>
@@ -87,67 +131,11 @@ export default function TableApplications({
       </Table>
 
       {editingApplication && (
-        <Dialog
-          open={!!editingApplication}
-          onOpenChange={() => setEditingApplication(null)}
-        >
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Editar Candidatura</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="nome" className="text-right">
-                  Nome
-                </Label>
-                <Input
-                  id="nome"
-                  value={editingApplication.companyName}
-                  onChange={(e) =>
-                    setEditingApplication({
-                      ...editingApplication,
-                      companyName: e.target.value,
-                    })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="vaga" className="text-right">
-                  Vaga
-                </Label>
-                <Input
-                  id="vaga"
-                  value={editingApplication.position}
-                  onChange={(e) =>
-                    setEditingApplication({
-                      ...editingApplication,
-                      position: e.target.value,
-                    })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="status" className="text-right">
-                  Status
-                </Label>
-                <Input
-                  id="status"
-                  value={editingApplication.status}
-                  onChange={(e) =>
-                    setEditingApplication({
-                      ...editingApplication,
-                      status: e.target.value,
-                    })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-            </div>
-            <Button onClick={updateApplication}>Salvar Alterações</Button>
-          </DialogContent>
-        </Dialog>
+        <ModalUpdateApplication
+          editingApplication={editingApplication}
+          setEditingApplication={setEditingApplication}
+          handleUpdateApplication={handleUpdateApplication}
+        />
       )}
 
       <Dialog
@@ -166,7 +154,7 @@ export default function TableApplications({
             >
               Cancelar
             </Button>
-            <Button variant="destructive" onClick={deleteApplication}>
+            <Button variant="destructive" onClick={handleDeleteApplication}>
               Confirmar Exclusão
             </Button>
           </div>

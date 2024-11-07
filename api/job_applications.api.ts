@@ -30,3 +30,15 @@ export async function createApplications(
   const response = await api.post<Application>(`/job-application`, body);
   return response.data;
 }
+
+export async function updateApplication(
+  body: Omit<Application, "id">,
+  id: string
+): Promise<Application> {
+  const response = await api.put<Application>(`/job-application/${id}`, body);
+  return response.data;
+}
+
+export async function deleteApplication(id: string): Promise<void> {
+  await api.delete<void>(`/job-application/${id}`);
+}
