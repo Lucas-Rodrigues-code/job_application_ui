@@ -16,3 +16,12 @@ export type countProgress = {
   name: string;
   data: number[];
 };
+
+export type JobApplicationGetAllResponse = {
+  total: number;
+  skip: number;
+  take: number;
+  next: string | null;
+  previous: string | null;
+  data: Application[];
+};

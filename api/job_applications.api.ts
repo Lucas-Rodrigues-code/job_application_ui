@@ -1,8 +1,18 @@
-import { Application, count, countProgress } from "@/types/application";
+import {
+  Application,
+  count,
+  countProgress,
+  JobApplicationGetAllResponse,
+} from "@/types/application";
 import api from "./api";
 
-export async function getApplications(): Promise<Application[]> {
-  const response = await api.get<Application[]>("/job-application");
+export async function getApplications(
+  skip: number,
+  take: number
+): Promise<JobApplicationGetAllResponse> {
+  const response = await api.get<JobApplicationGetAllResponse>(
+    `/job-application?skip=${skip}&take=${take}`
+  );
   return response.data;
 }
 

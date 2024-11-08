@@ -18,6 +18,7 @@ import {
 import { Application } from "@/types/application";
 import TableApplications from "@/components/table-applications";
 import { useToast } from "@/hooks/use-toast";
+import Paginate from "@/components/paginate";
 
 export default function ApplicationsPage() {
   const [application, seApplication] = useState<Application[]>([]);
@@ -28,22 +29,28 @@ export default function ApplicationsPage() {
     notes: "",
     applicationDate: "",
   });
+  const [totalItems, setTotalItems] = useState(0);
+  const [onPageChange, setOnPageChange] = useState(0);
+  const [onItemsPerPageChange, setOnItemsPerPageChange] = useState(10);
 
   useEffect(() => {
     const fetchApplications = async () => {
-      const data = await getApplications();
-      seApplication(data);
+      const data = await getApplications(onPageChange, onItemsPerPageChange);
+      setOnPageChange(data.skip);
+      setOnItemsPerPageChange(data.take);
+      setTotalItems(data.total);
+      seApplication(data.data);
     };
 
     fetchApplications();
-  }, []);
+  }, [onPageChange, onItemsPerPageChange]);
 
   const { toast } = useToast();
 
   const addApplication = async () => {
     try {
       const data = await createApplications(newApplication);
-      seApplication([...application, data]);
+      seApplication([data, ...application]);
       setNewApplication({
         companyName: "",
         position: "",
@@ -136,7 +143,18 @@ export default function ApplicationsPage() {
           />
           <Button onClick={addApplication}>Adicionar</Button>
         </div>
-        <TableApplications application={application} seApplication={seApplication} />
+        <TableApplications
+          application={application}
+          seApplication={seApplication}
+        />
+        <Paginate
+          totalItems={totalItems}
+          itemsPerPageOptions={[10, 20, 30, 50]}
+          defaultItemsPerPage={onItemsPerPageChange}
+          defaultPage={1}
+          setOnPageChange={setOnPageChange}
+          setOnItemsPerPageChange={setOnItemsPerPageChange}
+        />
       </div>
     </div>
   );
