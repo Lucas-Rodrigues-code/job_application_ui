@@ -1,5 +1,5 @@
 import {
-  BriefcaseIcon,
+  BarChart2,
   FileTextIcon,
   HomeIcon,
   LogOutIcon,
@@ -16,22 +16,22 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link
-              href="/"
+              href="/dashboard"
               className="flex items-center gap-2 font-semibold text-xl"
             >
-              <BriefcaseIcon className="h-6 w-6 text-primary" />
-              <span>Gerenciador de Candidaturas</span>
+              <BarChart2 className="h-6 w-6 text-primary" />
+              <span className="font-bold">InsightJobs </span>
             </Link>
             <nav className="hidden md:flex items-center gap-4">
               <Link
-                href="/"
+                href="/dashboard"
                 className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary"
               >
                 <HomeIcon className="h-4 w-4" />
                 Dashboard
               </Link>
               <Link
-                href="/applications"
+                href="/dashboard/applications"
                 className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary"
               >
                 <FileTextIcon className="h-4 w-4" />
