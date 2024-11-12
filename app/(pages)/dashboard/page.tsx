@@ -9,8 +9,9 @@ import { SelectionProcesses } from "@/components/selection-processes";
 
 import { getApplications } from "@/api/job_applications.api";
 import { Application, JobApplicationGetAllResponse } from "@/types/application";
+import withAuth from "@/hooks/withAuth";
 
-export default function DashboardPage() {
+function DashboardPage() {
   const [applications, setApplications] = useState<Application[]>([]);
 
   useEffect(() => {
@@ -97,3 +98,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+export default withAuth(DashboardPage);

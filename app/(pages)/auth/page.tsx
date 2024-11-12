@@ -12,14 +12,52 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
+type Form = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+type Login = {
+  email: string;
+  password: string;
+};
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [form, setForm] = useState<Form>({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [login, setLogin] = useState<Login>({
+    email: "",
+    password: "",
+  });
+  
+  const router = useRouter();
+
+  const { login: signIn } = useAuth();
+
+  const signUp = async (form: Form) => {
+    try {
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log("Form submitted:", isSignUp ? "Sign Up" : "Sign In");
+    if (isSignUp) {
+      signUp(form);
+    } else {
+      signIn(login.email, login.password);
+    }
   };
 
   return (
@@ -51,11 +89,21 @@ export default function AuthPage() {
                   type="email"
                   placeholder="john@example.com"
                   required
+                  onChange={(e) =>
+                    setLogin({ ...login, email: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Senha</Label>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  onChange={(e) =>
+                    setLogin({ ...login, password: e.target.value })
+                  }
+                />
               </div>
               {isSignUp && (
                 <div className="space-y-2">
