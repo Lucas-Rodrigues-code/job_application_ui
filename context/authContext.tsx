@@ -35,7 +35,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const { access_Token } = await AuthLogin(email, password);
+      const { access_Token, user } = await AuthLogin(email, password);
+      localStorage.setItem("user", JSON.stringify(user));
       document.cookie = `token=${access_Token}; path=/; max-age=86400`;
       setIsAuthenticated(true);
       router.push("/dashboard");
@@ -47,6 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     document.cookie = "token=; path=/; max-age=0";
+    localStorage.removeItem("user");
     setIsAuthenticated(false);
     router.push("/login");
   };

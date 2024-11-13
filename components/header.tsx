@@ -1,3 +1,4 @@
+"use client";
 import {
   BarChart2,
   FileTextIcon,
@@ -8,8 +9,12 @@ import {
 import Link from "next/link";
 
 import { Button } from "./ui/button";
+import { useAuth } from "@/context/authContext";
 
 export default function Header() {
+  const user = JSON.parse(localStorage.getItem("user") || "");
+  const { logout } = useAuth();
+  
   return (
     <header className="border-b bg-blue-50">
       <div className="container mx-auto px-4">
@@ -43,13 +48,11 @@ export default function Header() {
             <div className="flex items-center gap-2">
               <UserCircle className="h-8 w-8 text-muted-foreground" />
               <div className="hidden md:block">
-                <p className="text-sm font-medium">Usuário Demo</p>
-                <p className="text-xs text-muted-foreground">
-                  usuario@email.com
-                </p>
+                <p className="text-sm font-medium">{user.name}</p>
+                <p className="text-xs text-muted-foreground">{user.email}</p>
               </div>
             </div>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={logout}>
               <LogOutIcon className="h-5 w-5 text-muted-foreground" />
               <span className="sr-only">Sair</span>
             </Button>

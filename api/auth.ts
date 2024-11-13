@@ -1,10 +1,17 @@
 import api from "./api";
 
+type PromiseSignIn = {
+  access_Token: string;
+  user: {
+    name: string;
+    email: string;
+  };
+};
 export async function AuthLogin(
   email: string,
   password: string
-): Promise<{ access_Token: string }> {
-  const response = await api.post<{ access_Token: string }>("/auth/sign-in", {
+): Promise<PromiseSignIn> {
+  const response = await api.post<PromiseSignIn>("/auth/sign-in", {
     email,
     password,
   });

@@ -19,8 +19,9 @@ import { Application } from "@/types/application";
 import TableApplications from "@/components/table-applications";
 import { useToast } from "@/hooks/use-toast";
 import Paginate from "@/components/paginate";
+import withAuth from "@/hooks/withAuth";
 
-export default function ApplicationsPage() {
+function ApplicationsPage() {
   const [application, seApplication] = useState<Application[]>([]);
   const [newApplication, setNewApplication] = useState({
     companyName: "",
@@ -159,3 +160,5 @@ export default function ApplicationsPage() {
     </div>
   );
 }
+
+export default withAuth(ApplicationsPage);
