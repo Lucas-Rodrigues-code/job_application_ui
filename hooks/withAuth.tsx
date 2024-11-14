@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -6,7 +6,7 @@ import { useEffect } from "react";
 const withAuth = (WrappedComponent: React.ComponentType) => {
   return (props: any) => {
     const { isAuthenticated } = useAuth();
-    console.log(isAuthenticated);
+
     const router = useRouter();
 
     useEffect(() => {

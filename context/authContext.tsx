@@ -13,11 +13,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
-    return !!token;
+    if (typeof document !== "undefined") {
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("token="))
+        ?.split("=")[1];
+      return !!token;
+    }else{
+      return false;
+    }
   });
 
   const router = useRouter();
@@ -50,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     document.cookie = "token=; path=/; max-age=0";
     localStorage.removeItem("user");
     setIsAuthenticated(false);
-    router.push("/login");
+    router.push("/auth");
   };
 
   return (

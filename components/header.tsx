@@ -12,7 +12,8 @@ import { Button } from "./ui/button";
 import { useAuth } from "@/context/authContext";
 
 export default function Header() {
-  const user = JSON.parse(localStorage.getItem("user") || "");
+  const user = localStorage.getItem("user");
+const parsedUser = user ? JSON.parse(user) : null;
   const { logout } = useAuth();
   
   return (
@@ -48,8 +49,8 @@ export default function Header() {
             <div className="flex items-center gap-2">
               <UserCircle className="h-8 w-8 text-muted-foreground" />
               <div className="hidden md:block">
-                <p className="text-sm font-medium">{user.name}</p>
-                <p className="text-xs text-muted-foreground">{user.email}</p>
+                <p className="text-sm font-medium">{parsedUser?.name}</p>
+                <p className="text-xs text-muted-foreground">{parsedUser?.email}</p>
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={logout}>

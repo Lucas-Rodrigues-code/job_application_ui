@@ -89,6 +89,7 @@ export default function AuthPage() {
                   type="email"
                   placeholder="john@example.com"
                   required
+                  autoComplete="email"
                   onChange={(e) =>
                     setLogin({ ...login, email: e.target.value })
                   }
@@ -99,7 +100,9 @@ export default function AuthPage() {
                 <Input
                   id="password"
                   type="password"
+                  placeholder="senha"
                   required
+                  autoComplete="new-password"
                   onChange={(e) =>
                     setLogin({ ...login, password: e.target.value })
                   }
