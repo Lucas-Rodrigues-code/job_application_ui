@@ -13,6 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/context/authContext";
+import { AuthRegister } from "@/api/auth";
+import { useToast } from "@/hooks/use-toast";
 
 type Form = {
   name: string;
@@ -31,10 +33,23 @@ export default function AuthPage() {
   });
 
   const { login: signIn } = useAuth();
+  const { toast } = useToast();
 
   const signUp = async (form: Form) => {
     try {
-    } catch (error) {
+      await AuthRegister(form.name, form.email, form.password);
+      setIsSignUp(false);
+      toast({
+        title: "Conta criada com sucesso",
+        description: "Agora você pode fazer login",
+        variant: "sucess",
+      })
+    } catch (error:any) {
+      toast({
+        title: "Erro ao criar conta",
+        description: error?.response?.data?.message,
+        variant: "destructive",
+      });
       console.error(error);
     }
   };
