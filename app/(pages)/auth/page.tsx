@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 
 type Form = {
@@ -22,10 +21,6 @@ type Form = {
   confirmPassword: string;
 };
 
-type Login = {
-  email: string;
-  password: string;
-};
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [form, setForm] = useState<Form>({
@@ -34,12 +29,6 @@ export default function AuthPage() {
     password: "",
     confirmPassword: "",
   });
-  const [login, setLogin] = useState<Login>({
-    email: "",
-    password: "",
-  });
-  
-  const router = useRouter();
 
   const { login: signIn } = useAuth();
 
@@ -52,11 +41,12 @@ export default function AuthPage() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSignUp && form.password !== form.confirmPassword) return;
 
     if (isSignUp) {
       signUp(form);
     } else {
-      signIn(login.email, login.password);
+      signIn(form.email, form.password);
     }
   };
 
@@ -79,7 +69,12 @@ export default function AuthPage() {
               {isSignUp && (
                 <div className="space-y-2">
                   <Label htmlFor="name">Nome</Label>
-                  <Input id="name" placeholder="John Doe" required />
+                  <Input
+                    id="name"
+                    placeholder="John Doe"
+                    required
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
                 </div>
               )}
               <div className="space-y-2">
@@ -90,9 +85,7 @@ export default function AuthPage() {
                   placeholder="john@example.com"
                   required
                   autoComplete="email"
-                  onChange={(e) =>
-                    setLogin({ ...login, email: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
@@ -104,14 +97,26 @@ export default function AuthPage() {
                   required
                   autoComplete="new-password"
                   onChange={(e) =>
-                    setLogin({ ...login, password: e.target.value })
+                    setForm({ ...form, password: e.target.value })
                   }
                 />
               </div>
               {isSignUp && (
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirmar senha</Label>
-                  <Input id="confirmPassword" type="password" required />
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    required
+                    onChange={(e) =>
+                      setForm({ ...form, confirmPassword: e.target.value })
+                    }
+                  />
+                  {form.password !== form.confirmPassword && (
+                    <span className="text-xs text-red-500">
+                      As senhas devem ser iguais
+                    </span>
+                  )}
                 </div>
               )}
             </div>
