@@ -7,28 +7,18 @@ import { CountByMonth } from "@/components/bar-chart-count-by-month";
 
 import { SelectionProcesses } from "@/components/selection-processes";
 
-import { getApplications } from "@/api/job_applications.api";
-import { Application, JobApplicationGetAllResponse } from "@/types/application";
+import { getStats } from "@/api/job_applications.api";
+import { Stats } from "@/types/application";
 import withAuth from "@/hooks/withAuth";
 
 function DashboardPage() {
-  const [applications, setApplications] = useState<Application[]>([]);
+  const [applications, setApplications] = useState<Stats[]>([]);
 
   useEffect(() => {
     const get = async () => {
-      const data: JobApplicationGetAllResponse = await getApplications(0, 10);
+      const data: Stats[] = await getStats(2024);
       if (data) {
-        const job_applications = data.data.map((app) => {
-          return {
-            id: app.id,
-            companyName: app.companyName,
-            position: app.position,
-            applicationDate: app.applicationDate,
-            status: app.status,
-            notes: app.notes,
-          };
-        });
-        setApplications(job_applications);
+        setApplications(data);
       }
     };
     get();
@@ -36,10 +26,15 @@ function DashboardPage() {
 
   const stats = {
     total: applications.length,
-    inProgress: applications.filter((app) => app.status === "Em andamento")
-      .length,
-    rejected: applications.filter((app) => app.status === "Rejeitado").length,
-    accepted: applications.filter((app) => app.status === "Aceito").length,
+    inProgress: applications.filter(
+      (app) =>
+        app.status === "Em andamento" ||
+        app.status === "Entrevista Inicial" ||
+        app.status === "Em andamento" ||
+        app.status === "candidato"
+    ).length,
+    rejected: applications.filter((app) => app.status === "rejeitado").length,
+    accepted: applications.filter((app) => app.status === "contratado").length,
   };
 
   return (

@@ -25,3 +25,8 @@ export type JobApplicationGetAllResponse = {
   previous: string | null;
   data: Application[];
 };
+
+export type Stats = {
+  status: string;
+  count: number;
+}

@@ -34,6 +34,19 @@ export async function getApplicationsProgress(
   return response.data;
 }
 
+type Stats = {
+  status: string;
+  count: number;
+}
+export async function getStats(
+  year: number =2024,
+): Promise<Stats[]> {
+  const response = await api.get<Stats[]>(
+    `/job-application/stats/${year}`
+  );
+  return response.data;
+}
+
 export async function createApplications(
   body: Omit<Application, "id">
 ): Promise<Application> {
