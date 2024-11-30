@@ -114,11 +114,12 @@ function ApplicationsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="candidato">Candidato</SelectItem>
-              <SelectItem value="Entrevista Inicial">
+              <SelectItem value="entrevista_inicial">
                 Entrevista Inicial
               </SelectItem>
-              <SelectItem value="Em andamento">Em andamento</SelectItem>
+              <SelectItem value="em_andamento">Em andamento</SelectItem>
               <SelectItem value="contratado">Contratado</SelectItem>
+              <SelectItem value="rejeitado">Rejeitado</SelectItem>
             </SelectContent>
           </Select>
 
