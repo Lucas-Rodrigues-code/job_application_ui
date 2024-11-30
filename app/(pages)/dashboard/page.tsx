@@ -10,13 +10,14 @@ import { SelectionProcesses } from "@/components/selection-processes";
 import { getStats } from "@/api/job_applications.api";
 import { Stats } from "@/types/application";
 import withAuth from "@/hooks/withAuth";
+import { SimplePie } from "@/components/charts/simple-pie";
 
 function DashboardPage() {
   const [applications, setApplications] = useState<Stats[]>([]);
 
   useEffect(() => {
     const get = async () => {
-      const data: Stats[] = await getStats(2024);
+      const data: Stats[] = await getStats("2024");
       if (data) {
         setApplications(data);
       }
@@ -89,6 +90,7 @@ function DashboardPage() {
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <CountByMonth />
         <SelectionProcesses />
+        <SimplePie />
       </div>
     </div>
   );
