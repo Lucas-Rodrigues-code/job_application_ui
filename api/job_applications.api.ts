@@ -37,13 +37,9 @@ export async function getApplicationsProgress(
 type Stats = {
   status: string;
   count: number;
-}
-export async function getStats(
-  year: number =2024,
-): Promise<Stats[]> {
-  const response = await api.get<Stats[]>(
-    `/job-application/stats/${year}`
-  );
+};
+export async function getStats(year: string): Promise<Stats[]> {
+  const response = await api.get<Stats[]>(`/job-application/stats/${year}`);
   return response.data;
 }
 
