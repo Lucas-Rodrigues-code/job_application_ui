@@ -3,10 +3,8 @@ import { useState, useEffect } from "react";
 import { Briefcase } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CountByMonth } from "@/components/bar-chart-count-by-month";
-
-import { SelectionProcesses } from "@/components/selection-processes";
-
+import { CountByMonth } from "@/components/charts/bar-chart-count-by-month";
+import { SelectionProcesses } from "@/components/charts/selection-processes";
 import { getStats } from "@/api/job_applications.api";
 import { Stats } from "@/types/application";
 import withAuth from "@/hooks/withAuth";

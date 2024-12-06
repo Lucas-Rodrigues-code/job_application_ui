@@ -1,26 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
 
 import { getApplicationsProgress } from "@/api/job_applications.api";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { Label } from "./ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-
-export type Application = {
-  id: number;
-  companyName: string;
-  position: string;
-  applicationDate: string;
-  status: string;
-  notes: string;
-};
+import { Chart } from "./chart";
 
 export function SelectionProcesses() {
   const [counts, setCounts] = useState<{ name: string; data: number[] }[]>([]);
@@ -125,52 +107,13 @@ export function SelectionProcesses() {
     },
   };
 
-  const currentYear = new Date().getFullYear();
-  const years = Array.from(
-    { length: currentYear - 2022 },
-    (_, index) => currentYear - index
-  );
-
-  const handleYearChange = (value: string) => {
-    setSelectedYear(value);
-  };
-
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Progresso dos Processos Seletivos</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div>
-          <div className="w-full max-w-sm space-y-2">
-            <Label htmlFor="year-select">Selecione um ano</Label>
-            <Select value={selectedYear} onValueChange={handleYearChange}>
-              <SelectTrigger id="year-select">
-                <SelectValue placeholder="Select a year" />
-              </SelectTrigger>
-              <SelectContent>
-                {years.map((year) => (
-                  <SelectItem key={year} value={year.toString()}>
-                    {year}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {selectedYear && (
-              <p className="text-sm text-muted-foreground">
-                Ano: {selectedYear}
-              </p>
-            )}
-          </div>
-          <ReactApexChart
-            // @ts-ignore
-            options={state.options}
-            series={state.series}
-            type="line"
-            height={350}
-          />
-        </div>
-      </CardContent>
-    </Card>
+    <Chart
+      title="Progresso dos processos seletivos"
+      state={state}
+      type="line"
+      selectedYear={selectedYear}
+      setSelectedYear={setSelectedYear}
+    />
   );
 }

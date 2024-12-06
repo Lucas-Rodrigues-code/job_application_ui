@@ -1,26 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ApexChart from "react-apexcharts";
 
 import { getApplicationsCountByMonth } from "@/api/job_applications.api";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { Label } from "./ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-
-export type Application = {
-  id: number;
-  companyName: string;
-  position: string;
-  applicationDate: string;
-  status: string;
-  notes: string;
-};
+import { Chart } from "./chart";
 
 export function CountByMonth() {
   const [counts, setCounts] = useState<{ month: string; count: number }[]>([]);
@@ -110,51 +92,13 @@ export function CountByMonth() {
     },
   };
 
-  const currentYear = new Date().getFullYear();
-  const years = Array.from(
-    { length: currentYear - 2022 },
-    (_, index) => currentYear - index
-  );
-
-  const handleYearChange = (value: string) => {
-    setSelectedYear(value);
-  };
-
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Candidaturas por Mês</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div>
-          <div className="w-full max-w-sm space-y-2">
-            <Label htmlFor="year-select">Selecione um ano</Label>
-            <Select value={selectedYear} onValueChange={handleYearChange}>
-              <SelectTrigger id="year-select">
-                <SelectValue placeholder="Select a year" />
-              </SelectTrigger>
-              <SelectContent>
-                {years.map((year) => (
-                  <SelectItem key={year} value={year.toString()}>
-                    {year}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {selectedYear && (
-              <p className="text-sm text-muted-foreground">
-                Ano: {selectedYear}
-              </p>
-            )}
-          </div>
-          <ApexChart
-            options={state.options}
-            series={state.series}
-            type="bar"
-            height={350}
-          />
-        </div>
-      </CardContent>
-    </Card>
+    <Chart
+      title="Candidaturas por mês"
+      state={state}
+      type="bar"
+      selectedYear={selectedYear}
+      setSelectedYear={setSelectedYear}
+    />
   );
 }
